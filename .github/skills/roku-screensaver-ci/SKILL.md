@@ -21,3 +21,4 @@ argument-hint: 'Describe the Roku screensaver change to validate or build'
 5. To submit to the Streaming Store, sideload the ZIP onto a linked, internet-connected Roku development device and generate the signed `.pkg` through Roku's Development Application Packager. Never put signing keys or passwords in source control or CI.
 6. For runtime changes, install the development package on a Roku device and confirm the screensaver closes on remote input.
 7. Do not describe the FHD SceneGraph UI as native 4K; Roku scales it on 4K TVs.
+8. A successful push to `main` automatically publishes a versioned GitHub Release with the development ZIP. No release tag needs to be pushed manually.

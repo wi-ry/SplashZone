@@ -39,7 +39,7 @@ Roku requires a signed `.pkg` for Streaming Store submission. The `.pkg` cannot 
 
 See Roku's [Packaging Roku apps guide](https://developer.roku.com/dev/docs/packaging-channels) for key generation, signing, and repackaging details. Keep signing passwords and keys out of this repository and CI.
 
-GitHub Actions runs lint, version-policy tests, and build checks on pushes and pull requests. Pushing a `v*` tag publishes the unsigned development ZIP as `SplashZone-dev-sideload.zip` on a GitHub Release; it is not the signed `.pkg` needed for the Streaming Store.
+GitHub Actions runs lint, version-policy tests, and build checks on pushes and pull requests. Every successful push to `main` automatically creates a GitHub Release tagged from `package.json` (for example, `v2.0.1`) and attaches the unsigned development ZIP as `SplashZone-dev-sideload.zip`. No manual tag is needed. The release asset is not the signed `.pkg` required by the Streaming Store. If a release is retried for the same commit, its ZIP is replaced; an existing version attached to a different commit causes the release job to fail rather than overwrite it.
 
 ### Automatic SemVer
 
