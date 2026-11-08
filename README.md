@@ -34,6 +34,8 @@ The development/sideload ZIP is written to `dist/SplashZone.zip`. It contains th
 
 Roku requires a signed `.pkg` for Streaming Store submission. The `.pkg` cannot be produced by this CI build: Roku's packaging guide requires sideloading the app to a linked, internet-connected Roku development device and signing it with a key stored on that device.
 
+In the Roku Developer Dashboard, create or select a **Screensaver** app entry for Splash Zone before uploading the signed package. App type is assigned to the Dashboard app entry; package metadata cannot convert a Channel entry to a Screensaver. If Static Analysis reports that the package is a channel or requires `Main()` / `RunUserInterface()`, verify that the report belongs to the Screensaver app entry. Do not add those channel entry points: Roku requires standalone screensavers to use `RunScreenSaver()` and prohibits `Main()` and `RunUserInterface()` for them. If the in-channel screensaver certification finding persists under the Screensaver entry, verify the app type and package with Roku before changing the implementation.
+
 1. Sideload `dist/SplashZone.zip` to your Roku development device using its Development Application Installer.
 2. Generate or restore the correct developer key on the Roku. For a new app, Roku's guide uses the device's `genkey` utility; keep the developer ID and password private.
 3. Open the device's Development Application page, select **Packager**, and create the signed package using the app name, version, and key password.
