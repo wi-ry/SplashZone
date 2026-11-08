@@ -15,8 +15,8 @@ from xml.etree import ElementTree
 ROOT = Path(__file__).resolve().parent.parent
 PACKAGE_PATH = ROOT / "dist" / "SplashZone.zip"
 REQUIRED_MANIFEST_ENTRIES = {
-    "title",
     "screensaver_title",
+    "screensaver_private",
     "major_version",
     "minor_version",
     "build_version",
@@ -52,8 +52,17 @@ def validate_manifest() -> None:
     missing = REQUIRED_MANIFEST_ENTRIES - entries.keys()
     if missing:
         raise ValueError(f"Missing required manifest entries: {', '.join(sorted(missing))}.")
-    if entries["title"] != "Splash Zone" or entries["screensaver_title"] != "Splash Zone":
-        raise ValueError("The title and screensaver_title must both be Splash Zone.")
+    if "title" in entries:
+        raise ValueError(
+            "Standalone screensavers must not declare title; Roku's static analysis "
+            "treats it as a channel attribute. Use screensaver_title only."
+        )
+    if entries["screensaver_title"] != "Splash Zone":
+        raise ValueError("screensaver_title must be Splash Zone.")
+    if entries["screensaver_private"] != "0":
+        raise ValueError(
+            "The standalone system screensaver must declare screensaver_private=0."
+        )
     if entries["ui_resolutions"] != "fhd":
         raise ValueError("The SceneGraph project must declare its supported FHD UI resolution.")
     if entries["rsg_version"] != "1.3":

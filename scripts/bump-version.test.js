@@ -32,7 +32,6 @@ test("rejects invalid versions and line counts", () => {
 
 test("synchronizes SemVer fields in the Roku manifest", () => {
     const manifest = [
-        "title=Splash Zone",
         "screensaver_title=Splash Zone",
         "major_version=1",
         "minor_version=2",
@@ -72,7 +71,7 @@ test("updates and stages all version files for a commit", (t) => {
     );
     write(
         "manifest",
-        "title=Splash Zone\nscreensaver_title=Splash Zone\nmajor_version=1\nminor_version=2\nbuild_version=00003\n",
+        "screensaver_title=Splash Zone\nmajor_version=1\nminor_version=2\nbuild_version=00003\n",
     );
     write("scripts/bump-version.js", fs.readFileSync(require.resolve("./bump-version.js")));
     write("src/change.brs", "baseline\n");

@@ -14,7 +14,7 @@ Source: [Roku Screensavers](https://developer.roku.com/dev/docs/screensavers), u
 - A screensaver is a standalone app type, not a feature to embed in an ordinary streaming, audio, game, or utility app.
 - The screensaver is invoked after the configured idle period. Remote input terminates it and returns the user to the prior app.
 - Use `RunScreenSaver()` as the entry point. `Main()` and `RunUserInterface()` are prohibited for screensavers; never add them to silence an analyzer message.
-- Include `screensaver_title` in the manifest, normally matching the app title. Roku reserves this manifest attribute for screensaver apps.
+- Include `screensaver_title` in the manifest, set `screensaver_private=0` for a system-wide screensaver, and do **not** add `title`. Roku reserves `screensaver_title` for screensaver apps; `title` is a channel attribute and can make static analysis classify the package as a channel. A private screensaver (`screensaver_private=1`) is channel-scoped rather than listed with system-wide screensavers.
 - Do not require user input or add user-initiated interactive functionality, deep links, ads, in-app purchases, or DynamicComponent libraries.
 - Do not use `roAudioPlayer`, `roChannelStore`, or `roVideoPlayer`; SceneGraph screensavers must not contain a `Video` node or play video.
 - `RunScreenSaverSettings()` is an optional entry point for screensaver-specific settings. Without it, the settings menu is not provided.
@@ -24,7 +24,7 @@ Source: [Roku Screensavers](https://developer.roku.com/dev/docs/screensavers), u
 
 ## App type and certification triage
 
-- Verify that the package is uploaded under a **Screensaver** app entry in the Developer Dashboard. A package manifest cannot change the app type selected for that dashboard app.
+- Verify that the package is uploaded under a **Screensaver** app entry in the Developer Dashboard. Also verify the manifest omits `title`, uses `screensaver_title`, and sets `screensaver_private=0` for the standalone system screensaver.
 - If Static Analysis says a channel is missing `Main()` / `RunUserInterface()`, do not change a screensaver's entry point. First confirm that the correct Screensaver app entry and package were analyzed.
 - Certification criterion 4.5 prohibits apps from overriding or interfering with Roku's system screensaver. This is different from publishing a standalone screensaver app. Do not misinterpret the general channel prohibition as banning the standalone screensaver app type.
 - If the Dashboard app is confirmed to be a Screensaver and the report still labels it as a channel or reports an in-channel screensaver, preserve the standalone screensaver implementation and escalate the report, app ID, and package details to Roku. Do not redesign it as a channel merely to suppress a possibly misclassified finding.

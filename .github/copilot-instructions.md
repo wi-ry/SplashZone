@@ -3,7 +3,7 @@
 - This repository is a standalone Roku SceneGraph screensaver, not a streaming app.
 - Preserve `RunScreenSaver()` as the entry point; do not add `Main()` or `RunUserInterface()`.
 - Screensavers must not require user input or use audio/video playback.
-- Keep the app identity as **Splash Zone** in the manifest and release package.
+- Keep the app identity as **Splash Zone** via `screensaver_title` in the manifest and release package. Set `screensaver_private=0` for the system-wide screensaver. Never add a `title=` entry: it is a channel attribute and can make Roku static analysis report "Channel type is channel" plus 4.5 in-channel screensaver errors.
 - Keep SceneGraph XML and BrightScript valid, and ensure component and script references resolve.
 - The scene uses Roku's FHD `1920x1080` UI coordinate space; describe 4K TV support as scaled UI, not native UHD rendering.
 - Run `npm run lint` and `npm run build` after code changes. The build validator writes `dist/SplashZone.zip`.
