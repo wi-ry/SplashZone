@@ -1,6 +1,6 @@
 {
   "name": "splashzone",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "A standalone Roku SceneGraph aquarium screensaver.",
   "scripts": {
     "lint": "bslint && python scripts/build.py --check",

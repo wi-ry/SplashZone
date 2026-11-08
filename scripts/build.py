@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import struct
 import sys
 import zipfile
 from pathlib import Path
@@ -53,6 +54,22 @@ def validate_manifest() -> None:
         raise ValueError("The title and screensaver_title must both be Splash Zone.")
     if entries["ui_resolutions"] != "fhd":
         raise ValueError("The SceneGraph project must declare its supported FHD UI resolution.")
+    if entries.get("mm_icon_focus_fhd") != "pkg:/images/channel-icon_FHD.png":
+        raise ValueError(
+            "The FHD app icon must be declared as pkg:/images/channel-icon_FHD.png."
+        )
+
+    icon_path = ROOT / "images" / "channel-icon_FHD.png"
+    if not icon_path.is_file():
+        raise ValueError(f"Missing FHD app icon: {icon_path.relative_to(ROOT)}.")
+    icon_data = icon_path.read_bytes()
+    if len(icon_data) < 24 or icon_data[:8] != b"\x89PNG\r\n\x1a\n":
+        raise ValueError("The FHD app icon must be a valid PNG image.")
+    icon_width, icon_height = struct.unpack(">II", icon_data[16:24])
+    if (icon_width, icon_height) != (540, 405):
+        raise ValueError(
+            f"The FHD app icon must be 540x405 pixels, got {icon_width}x{icon_height}."
+        )
 
     for key in ("major_version", "minor_version", "build_version"):
         if not entries[key].isdigit():
@@ -144,7 +161,7 @@ def validate_screensaver_entrypoint() -> None:
 
 def package_channel() -> None:
     package_files = [ROOT / "manifest"]
-    for directory in ("source", "components"):
+    for directory in ("source", "components", "images"):
         package_files.extend(
             path for path in (ROOT / directory).rglob("*") if path.is_file()
         )
@@ -157,7 +174,12 @@ def package_channel() -> None:
 
     with zipfile.ZipFile(PACKAGE_PATH) as archive:
         entries = set(archive.namelist())
-        required = {"manifest", "source/main.brs", "components/AquariumScene.xml"}
+        required = {
+            "manifest",
+            "source/main.brs",
+            "components/AquariumScene.xml",
+            "images/channel-icon_FHD.png",
+        }
         missing = required - entries
         if missing:
             raise ValueError(f"Built ZIP is missing required files: {', '.join(sorted(missing))}.")

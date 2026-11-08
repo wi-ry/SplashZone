@@ -245,6 +245,8 @@ def main() -> None:
     screenshots_dir.mkdir(parents=True, exist_ok=True)
     store_dir = ASSETS / "store"
     store_dir.mkdir(parents=True, exist_ok=True)
+    images_dir = ROOT / "images"
+    images_dir.mkdir(parents=True, exist_ok=True)
 
     scenes = [render_scene(variant) for variant in range(3)]
     for index, scene in enumerate(scenes, start=1):
@@ -256,6 +258,9 @@ def main() -> None:
     destination = store_dir / "SplashZone-Store-540x405.png"
     artwork.save(destination, format="PNG", optimize=True)
     print(f"Created {destination.relative_to(ROOT)} (540x405)")
+    icon_destination = images_dir / "channel-icon_FHD.png"
+    artwork.save(icon_destination, format="PNG", optimize=True)
+    print(f"Created {icon_destination.relative_to(ROOT)} (540x405)")
 
 
 if __name__ == "__main__":

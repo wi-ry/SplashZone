@@ -1,6 +1,7 @@
 title=Splash Zone
 screensaver_title=Splash Zone
-major_version=1
+major_version=2
 minor_version=0
-build_version=00001
+build_version=00000
 ui_resolutions=fhd
+mm_icon_focus_fhd=pkg:/images/channel-icon_FHD.png
