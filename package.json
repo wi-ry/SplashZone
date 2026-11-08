@@ -1,0 +1,17 @@
+{
+  "name": "splashzone",
+  "version": "1.0.1",
+  "description": "A standalone Roku SceneGraph aquarium screensaver.",
+  "scripts": {
+    "lint": "bslint && python scripts/build.py --check",
+    "build": "python scripts/build.py",
+    "test:version": "node --test scripts/bump-version.test.js",
+    "test": "npm run lint && npm run test:version && npm run build",
+    "prepare": "node scripts/install-hooks.js"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "@rokucommunity/bslint": "^0.8.47",
+    "brighterscript": "^0.73.8"
+  }
+}

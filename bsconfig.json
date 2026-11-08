@@ -1,0 +1,7 @@
+{
+    "rootDir": ".",
+    "plugins": ["@rokucommunity/bslint"],
+    "autoImportComponentScript": true,
+    "createPackage": false,
+    "diagnosticLevel": "warn"
+}

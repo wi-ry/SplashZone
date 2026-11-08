@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="StickFish" extends="Group">
+    <interface>
+        <field id="fishColor" type="string" value="0x78E5E8FF" />
+    </interface>
+    <children>
+        <Rectangle id="Spine" width="88" height="4" translation="[14,34]" />
+        <Rectangle id="UpperLeft" width="47" height="4" translation="[14,17]" rotation="-25" />
+        <Rectangle id="UpperRight" width="47" height="4" translation="[53,17]" rotation="25" />
+        <Rectangle id="LowerLeft" width="47" height="4" translation="[14,51]" rotation="25" />
+        <Rectangle id="LowerRight" width="47" height="4" translation="[53,51]" rotation="-25" />
+        <Rectangle id="TailUpper" width="31" height="4" translation="[94,18]" rotation="-39" />
+        <Rectangle id="TailLower" width="31" height="4" translation="[94,50]" rotation="39" />
+        <Rectangle id="Eye" width="6" height="6" translation="[19,31]" />
+    </children>
+</component>
