@@ -146,7 +146,7 @@ def draw_seaweed(
     image.alpha_composite(layer)
 
 
-def render_scene(variant: int, store_artwork: bool = False) -> Image.Image:
+def render_scene(elapsed_seconds: float = 0, store_artwork: bool = False) -> Image.Image:
     image = Image.new("RGBA", (WIDTH, HEIGHT), "#06243f")
     draw = ImageDraw.Draw(image)
     draw.rectangle((0, 170, WIDTH, 390), fill="#0a3552")
@@ -186,25 +186,36 @@ def render_scene(variant: int, store_artwork: bool = False) -> Image.Image:
     ):
         draw_seaweed(image, origin, stalks)
 
-    fish_positions = [
-        (260 + variant * 82, 282 - variant * 14, 1.25, FISH[0]),
-        (650 + variant * 115, 500 + variant * 8, 0.8, FISH[1]),
-        (1120 - variant * 95, 705 - variant * 12, 1.05, FISH[2]),
-        (1490 - variant * 110, 388 + variant * 22, 0.62, FISH[3]),
+    fish = [
+        [250, 285, 1.25, FISH[0], 2.2],
+        [650, 525, 0.8, FISH[1], 3.0],
+        [1080, 735, 1.05, FISH[2], 1.8],
+        [1510, 405, 0.62, FISH[3], 3.6],
     ]
+    bubbles = [
+        [315, 750, 1, 2.4],
+        [785, 590, 1.3, 1.8],
+        [1160, 820, 0.75, 2.8],
+        [1570, 420, 1.15, 2.1],
+    ]
+    ticks = round(elapsed_seconds / 0.05)
+    for _ in range(ticks):
+        for swimmer in fish:
+            swimmer[0] += swimmer[4]
+            if swimmer[0] > 1980:
+                swimmer[0] = -150
+        for bubble in bubbles:
+            bubble[1] -= bubble[3]
+            if bubble[1] < -40:
+                bubble[1] = 1120
+
     if store_artwork:
-        x, y, fish_scale, fish_color = fish_positions[0]
-        fish_positions[0] = (x + 200, y + 150, fish_scale, fish_color)
-    for x, y, scale, color in fish_positions:
+        fish[0][0] += 200
+        fish[0][1] += 150
+    for x, y, scale, color, _speed in fish:
         draw_scene_fish(image, (x, y), scale, color)
 
-    bubble_positions = (
-        (305 + variant * 34, 660 - variant * 125, 1),
-        (785 - variant * 45, 370 + variant * 118, 1.3),
-        (1158 + variant * 38, 585 - variant * 93, 0.75),
-        (1568 - variant * 25, 248 + variant * 142, 1.15),
-    )
-    for x, y, scale in bubble_positions:
+    for x, y, scale, _speed in bubbles:
         draw_bubble(image, x, y, scale)
 
     return image.convert("RGB")
@@ -248,13 +259,17 @@ def main() -> None:
     images_dir = ROOT / "images"
     images_dir.mkdir(parents=True, exist_ok=True)
 
-    scenes = [render_scene(variant) for variant in range(3)]
-    for index, scene in enumerate(scenes, start=1):
+    preview_times = (0, 8, 16)
+    for index, elapsed_seconds in enumerate(preview_times, start=1):
+        scene = render_scene(elapsed_seconds)
         destination = screenshots_dir / f"SplashZone-Screenshot-{index:02d}-1920x1080.png"
         scene.save(destination, format="PNG", optimize=True)
-        print(f"Created {destination.relative_to(ROOT)} ({WIDTH}x{HEIGHT})")
+        print(
+            f"Created {destination.relative_to(ROOT)} "
+            f"({WIDTH}x{HEIGHT}, motion at {elapsed_seconds}s)"
+        )
 
-    artwork = make_store_artwork(render_scene(0, store_artwork=True))
+    artwork = make_store_artwork(render_scene(store_artwork=True))
     destination = store_dir / "SplashZone-Store-540x405.png"
     artwork.save(destination, format="PNG", optimize=True)
     print(f"Created {destination.relative_to(ROOT)} (540x405)")
@@ -267,7 +282,7 @@ def main() -> None:
     )
     print(f"Created {hd_icon_destination.relative_to(ROOT)} (290x218)")
     splash_destination = images_dir / "splash-screen_HD.jpg"
-    render_scene(0).resize((1280, 720), Image.Resampling.LANCZOS).save(
+    render_scene().resize((1280, 720), Image.Resampling.LANCZOS).save(
         splash_destination, format="JPEG", quality=90, optimize=True
     )
     print(f"Created {splash_destination.relative_to(ROOT)} (1280x720)")
