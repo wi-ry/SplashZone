@@ -67,7 +67,8 @@ jobs:
             exit 1
           fi
           tag="v$version"
-          asset="dist/SplashZone.zip#SplashZone-dev-sideload.zip"
+          asset="dist/SplashZone-v${version}-dev-sideload.zip"
+          cp dist/SplashZone.zip "$asset"
 
           if gh release view "$tag" >/dev/null 2>&1; then
             target="$(gh release view "$tag" --json targetCommitish --jq .targetCommitish)"
@@ -77,6 +78,9 @@ jobs:
               exit 1
             fi
             gh release upload "$tag" "$asset" --clobber
+            if gh release view "$tag" --json assets --jq '.assets[].name' | grep -Fxq "SplashZone.zip"; then
+              gh release delete-asset "$tag" SplashZone.zip --yes
+            fi
           else
             gh release create "$tag" "$asset" --target "$GITHUB_SHA" --generate-notes
           fi
