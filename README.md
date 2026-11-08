@@ -28,7 +28,7 @@ Build and validate the installable channel package:
 npm run build
 ```
 
-The development/sideload ZIP is written to `dist/SplashZone.zip`. It contains the channel files with `manifest` at the archive root and the FHD channel icon declared in the manifest; it is **not** a signed Streaming Store submission package. Generated project artwork and screenshot previews are in [`assets/`](</W:/Development/SplashZone/assets>).
+The development/sideload ZIP is written to `dist/SplashZone.zip`. It contains the channel files with `manifest` at the archive root and HD/FHD channel icons declared in the manifest; it is **not** a signed Streaming Store submission package. Roku uses the appropriate icon variant for its UI resolution. Generated project artwork and screenshot previews are in [`assets/`](</W:/Development/SplashZone/assets>).
 
 ### Create a Streaming Store package
 

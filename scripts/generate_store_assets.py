@@ -261,6 +261,11 @@ def main() -> None:
     icon_destination = images_dir / "channel-icon_FHD.png"
     artwork.save(icon_destination, format="PNG", optimize=True)
     print(f"Created {icon_destination.relative_to(ROOT)} (540x405)")
+    hd_icon_destination = images_dir / "channel-icon_HD.png"
+    artwork.resize((290, 218), Image.Resampling.LANCZOS).save(
+        hd_icon_destination, format="PNG", optimize=True
+    )
+    print(f"Created {hd_icon_destination.relative_to(ROOT)} (290x218)")
 
 
 if __name__ == "__main__":

@@ -54,22 +54,25 @@ def validate_manifest() -> None:
         raise ValueError("The title and screensaver_title must both be Splash Zone.")
     if entries["ui_resolutions"] != "fhd":
         raise ValueError("The SceneGraph project must declare its supported FHD UI resolution.")
-    if entries.get("mm_icon_focus_fhd") != "pkg:/images/channel-icon_FHD.png":
-        raise ValueError(
-            "The FHD app icon must be declared as pkg:/images/channel-icon_FHD.png."
-        )
-
-    icon_path = ROOT / "images" / "channel-icon_FHD.png"
-    if not icon_path.is_file():
-        raise ValueError(f"Missing FHD app icon: {icon_path.relative_to(ROOT)}.")
-    icon_data = icon_path.read_bytes()
-    if len(icon_data) < 24 or icon_data[:8] != b"\x89PNG\r\n\x1a\n":
-        raise ValueError("The FHD app icon must be a valid PNG image.")
-    icon_width, icon_height = struct.unpack(">II", icon_data[16:24])
-    if (icon_width, icon_height) != (540, 405):
-        raise ValueError(
-            f"The FHD app icon must be 540x405 pixels, got {icon_width}x{icon_height}."
-        )
+    required_icons = {
+        "mm_icon_focus_fhd": ("pkg:/images/channel-icon_FHD.png", (540, 405)),
+        "mm_icon_focus_hd": ("pkg:/images/channel-icon_HD.png", (290, 218)),
+    }
+    for manifest_key, (uri, dimensions) in required_icons.items():
+        if entries.get(manifest_key) != uri:
+            raise ValueError(f"{manifest_key} must be declared as {uri}.")
+        icon_path = ROOT.joinpath(*uri.removeprefix("pkg:/").split("/"))
+        if not icon_path.is_file():
+            raise ValueError(f"Missing app icon: {icon_path.relative_to(ROOT)}.")
+        icon_data = icon_path.read_bytes()
+        if len(icon_data) < 24 or icon_data[:8] != b"\x89PNG\r\n\x1a\n":
+            raise ValueError(f"{manifest_key} must point to a valid PNG image.")
+        icon_dimensions = struct.unpack(">II", icon_data[16:24])
+        if icon_dimensions != dimensions:
+            raise ValueError(
+                f"{manifest_key} must be {dimensions[0]}x{dimensions[1]} pixels, "
+                f"got {icon_dimensions[0]}x{icon_dimensions[1]}."
+            )
 
     for key in ("major_version", "minor_version", "build_version"):
         if not entries[key].isdigit():
@@ -182,6 +185,7 @@ def package_channel() -> None:
             "source/main.brs",
             "components/AquariumScene.xml",
             "images/channel-icon_FHD.png",
+            "images/channel-icon_HD.png",
         }
         missing = required - entries
         if missing:
