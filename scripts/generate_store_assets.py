@@ -266,6 +266,11 @@ def main() -> None:
         hd_icon_destination, format="PNG", optimize=True
     )
     print(f"Created {hd_icon_destination.relative_to(ROOT)} (290x218)")
+    splash_destination = images_dir / "splash-screen_HD.jpg"
+    render_scene(0).resize((1280, 720), Image.Resampling.LANCZOS).save(
+        splash_destination, format="JPEG", quality=90, optimize=True
+    )
+    print(f"Created {splash_destination.relative_to(ROOT)} (1280x720)")
 
 
 if __name__ == "__main__":

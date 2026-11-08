@@ -21,6 +21,8 @@ REQUIRED_MANIFEST_ENTRIES = {
     "minor_version",
     "build_version",
     "ui_resolutions",
+    "rsg_version",
+    "splash_screen_hd",
 }
 
 
@@ -54,6 +56,17 @@ def validate_manifest() -> None:
         raise ValueError("The title and screensaver_title must both be Splash Zone.")
     if entries["ui_resolutions"] != "fhd":
         raise ValueError("The SceneGraph project must declare its supported FHD UI resolution.")
+    if entries["rsg_version"] != "1.3":
+        raise ValueError("The manifest must declare rsg_version=1.3.")
+    splash_uri = "pkg:/images/splash-screen_HD.jpg"
+    if entries["splash_screen_hd"] != splash_uri:
+        raise ValueError(f"splash_screen_hd must be declared as {splash_uri}.")
+    splash_path = ROOT.joinpath(*splash_uri.removeprefix("pkg:/").split("/"))
+    if not splash_path.is_file():
+        raise ValueError(f"Missing HD splash screen: {splash_path.relative_to(ROOT)}.")
+    if not splash_path.read_bytes().startswith(b"\xff\xd8"):
+        raise ValueError("splash_screen_hd must point to a valid JPEG image.")
+
     required_icons = {
         "mm_icon_focus_fhd": ("pkg:/images/channel-icon_FHD.png", (540, 405)),
         "mm_icon_focus_hd": ("pkg:/images/channel-icon_HD.png", (290, 218)),
@@ -194,6 +207,7 @@ def package_channel() -> None:
             "components/AquariumScene.xml",
             "images/channel-icon_FHD.png",
             "images/channel-icon_HD.png",
+            "images/splash-screen_HD.jpg",
         }
         missing = required - entries
         if missing:
