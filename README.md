@@ -2,6 +2,8 @@
 
 A standalone Roku SceneGraph screensaver with animated stick-drawn fish, rising outlined bubbles, and a simple underwater backdrop. It uses no external images, video, audio, or interactive controls.
 
+The scene motion is driven by a SceneGraph `Timer` that updates each fish and bubble position. On device, the BrightScript console prints `[Splash Zone] Motion timer started` and `[Splash Zone] Motion timer tick received` when its motion loop is running.
+
 ## Roku display resolution
 
 The scene is authored in Roku's FHD (`1920x1080`) SceneGraph coordinate space and is suitable for 4K Roku TVs, which scale the app UI to the display. Roku's app manifest UI resolution setting does not provide a native 4K SceneGraph mode, so this project does not claim native UHD rendering.

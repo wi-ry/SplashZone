@@ -126,6 +126,7 @@ def validate_components() -> None:
                 "field",
                 "Animation",
                 "Vector2DFieldInterpolator",
+                "Timer",
                 "Rectangle",
                 "Group",
             } and node.tag not in components:
@@ -143,6 +144,8 @@ def validate_components() -> None:
     scene = components.get("AquariumScene")
     if scene is None:
         raise ValueError("Missing AquariumScene component.")
+    if not any(node.get("id") == "MotionTimer" for node in scene.iter("Timer")):
+        raise ValueError("AquariumScene must include the MotionTimer used by the scene script.")
     for node in scene.iter():
         if node.tag in {"StickFish", "Bubble"} and node.tag not in components:
             raise ValueError(f"Scene references missing component <{node.tag}>.")

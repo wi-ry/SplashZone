@@ -22,3 +22,4 @@ argument-hint: 'Describe the Roku screensaver change to validate or build'
 6. For runtime changes, install the development package on a Roku device and confirm the screensaver closes on remote input.
 7. Do not describe the FHD SceneGraph UI as native 4K; Roku scales it on 4K TVs.
 8. A successful push to `main` automatically publishes a versioned GitHub Release with the development ZIP. No release tag needs to be pushed manually.
+9. Aquarium motion is driven by the SceneGraph `MotionTimer`; verify the console reports that it started and received a tick when troubleshooting static output.
