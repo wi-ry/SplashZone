@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="AquariumScene" extends="Scene">
+    <script type="text/brightscript" uri="pkg:/components/AquariumScene.brs" />
     <children>
         <Rectangle width="1920" height="1080" color="0x06243FFF" />
         <Rectangle width="1920" height="220" translation="[0,170]" color="0x0A3552FF" />

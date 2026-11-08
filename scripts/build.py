@@ -147,6 +147,14 @@ def validate_components() -> None:
     scene = components.get("AquariumScene")
     if scene is None:
         raise ValueError("Missing AquariumScene component.")
+    scene_scripts = {
+        script.get("uri")
+        for script in scene.findall("./script")
+    }
+    if "pkg:/components/AquariumScene.brs" not in scene_scripts:
+        raise ValueError(
+            "AquariumScene must import pkg:/components/AquariumScene.brs to initialize motion."
+        )
     if not any(node.get("id") == "MotionTimer" for node in scene.iter("Timer")):
         raise ValueError("AquariumScene must include the MotionTimer used by the scene script.")
     for node in scene.iter():
